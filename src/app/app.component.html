@@ -4,7 +4,7 @@
            class="form-control"
            placeholder="Enter search string"
            onkeydown="if(event.keyCode == 13) return false;"
-           #search>
+           [formControl]="searchField">
   </div>
   <button class="btn btn-primary"
           type="button"
@@ -21,7 +21,7 @@
 
 <ul class="list-group">
   <li class="list-group-item"
-      *ngFor="let track of results">
+      *ngFor="let track of results | async">
     <img src="{{ track.thumbnail }}" alt="Art Work">
     &nbsp;
     <a href="{{ track.link }}"

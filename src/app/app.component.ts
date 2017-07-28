@@ -1,4 +1,9 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
+import { Observable } from "rxjs/Observable";
+import { FormControl } from "@angular/forms";
+import "rxjs/add/operator/debounceTime";
+import "rxjs/add/operator/distinctUntilChanged";
+import "rxjs/add/operator/switchMap";
 
 import { SearchService } from "./search.service";
 import { SearchItem } from "./search-item";
@@ -8,17 +13,23 @@ import { SearchItem } from "./search-item";
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   private loading: boolean = false;
-  private results: SearchItem[];
+  private results: Observable<SearchItem[]>;
+  private searchField: FormControl;
 
   constructor(private itunes: SearchService) { }
 
+  ngOnInit() {
+    this.searchField = new FormControl();
+    this.results = this.searchField.valueChanges
+      .debounceTime(400)
+      .distinctUntilChanged()
+      .switchMap(term => this.itunes.search(term));
+  }
+
   doSearch(term: string) {
     this.loading = true;
-    this.itunes.search(term).subscribe(data => {
-      this.loading = false;
-      this.results = data;
-    });
+    this.results = this.itunes.search(term);
   }
 }
