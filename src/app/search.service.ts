@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Http } from "@angular/http";
-import "rxjs/add/operator/toPromise";
+import { Observable } from "rxjs/Observable";
+// import "rxjs/add/operator/toPromise";
+import "rxjs/add/operator/map";
 
 import { SearchItem } from "./search-item";
 
@@ -15,29 +17,19 @@ export class SearchService {
     this.loading = false;
   }
 
-  search(term: string) {
-    const promise = new Promise((resolve, reject) => {
-      const apiURL = `${this.apiRoot}?term=${term}&media=music&limit=20`;
-      this.http.get(apiURL)
-        .toPromise()
-        .then(
-          res => { // Success
-            this.results = res.json().results.map(item => {
-              return new SearchItem(
-                item.trackName,
-                item.artistName,
-                item.trackViewUrl,
-                item.artworkUrl30,
-                item.artistId
-              );
-            });
-            resolve();
-          },
-          msg => { // Error
-            reject(msg);
-          }
-        );
-    });
-    return promise;
+  search(term: string): Observable<SearchItem[]> {
+    const url = `${this.apiRoot}?term=${term}&media=music&limit=20`;
+    return this.http.get(url)
+      .map(res => {
+        return res.json().results.map(item => {
+          return new SearchItem(
+            item.trackName,
+            item.artistName,
+            item.trackViewUrl,
+            item.artworkUrl30,
+            item.artistId
+          );
+        });
+      });
   }
 }
