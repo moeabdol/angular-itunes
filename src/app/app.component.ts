@@ -4,6 +4,7 @@ import { FormControl } from "@angular/forms";
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
 import "rxjs/add/operator/switchMap";
+import "rxjs/add/operator/do";
 
 import { SearchService } from "./search.service";
 import { SearchItem } from "./search-item";
@@ -25,11 +26,13 @@ export class AppComponent implements OnInit {
     this.results = this.searchField.valueChanges
       .debounceTime(400)
       .distinctUntilChanged()
-      .switchMap(term => this.itunes.search(term));
+      .do(() => this.loading = true)
+      .switchMap(term => this.itunes.search(term))
+      .do(() => this.loading = false);
   }
 
-  doSearch(term: string) {
-    this.loading = true;
-    this.results = this.itunes.search(term);
-  }
+  // doSearch(term: string) {
+  //   this.loading = true;
+  //   this.results = this.itunes.search(term);
+  // }
 }
