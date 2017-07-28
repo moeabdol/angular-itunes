@@ -13,6 +13,8 @@
   </button>
 </form>
 
+<br/>
+
 <div class="text-center">
   <p class="lead" *ngIf="loading">Loading...</p>
 </div>
@@ -20,8 +22,9 @@
 <ul class="list-group">
   <li class="list-group-item"
       *ngFor="let track of itunes.results">
-    <img src="{{ track.artworkUrl30 }}" alt="Art Work">
-    <a href="{{ track.trackViewUrl }}"
-       target="_blank">{{ track.trackName }}</a>
+    <img src="{{ track.thumbnail }}" alt="Art Work">
+    &nbsp;
+    <a href="{{ track.link }}"
+       target="_blank">{{ track.name }}</a>
   </li>
 </ul>
