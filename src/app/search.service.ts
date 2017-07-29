@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Http } from "@angular/http";
+// import { Http } from "@angular/http";
+import { Jsonp } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 // import "rxjs/add/operator/toPromise";
 import "rxjs/add/operator/map";
@@ -12,14 +13,15 @@ export class SearchService {
   results: SearchItem[];
   loading: boolean;
 
-  constructor(private http: Http) {
+  constructor(private jsonp: Jsonp) {
     this.results = [];
     this.loading = false;
   }
 
   search(term: string): Observable<SearchItem[]> {
-    const url = `${this.apiRoot}?term=${term}&media=music&limit=20`;
-    return this.http.get(url)
+    const url = `${this.apiRoot}?term=${term}&media=music&limit=20
+      &callback=JSONP_CALLBACK`;
+    return this.jsonp.request(url)
       .map(res => {
         return res.json().results.map(item => {
           return new SearchItem(

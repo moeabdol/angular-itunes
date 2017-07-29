@@ -1,6 +1,7 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
-import { HttpModule } from "@angular/http";
+// import { HttpModule } from "@angular/http";
+import { JsonpModule } from "@angular/http";
 import { ReactiveFormsModule } from "@angular/forms";
 import { FormsModule } from "@angular/forms";
 
@@ -13,7 +14,8 @@ import { SearchService } from "./search.service";
   ],
   imports: [
     BrowserModule,
-    HttpModule,
+    // HttpModule,
+    JsonpModule,
     ReactiveFormsModule,
     FormsModule
   ],
